@@ -1,0 +1,10 @@
+I wrote this code on 18 July 2013 is Thursday
+Christopher Columbus 12 October 1043 is INVALID
+Osama Killed on 2 May 2011 is Monday
+Morarji Desai born on 29 February 1896 is Saturday
+Will this work 28 February 1754 is INVALID
+Will this work 2 January 2034 is INVALID
+Declaration of independence officially adopted 4 July 1776 is Thursday
+Hitler becomes dictator of Germany 23 March 1933 is Thursday
+Was 2016 leap year? 29 February 2016 is Monday
+Was 2016 leap year? 30 February 2016 is INVALID

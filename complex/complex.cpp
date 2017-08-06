@@ -18,8 +18,12 @@ complex::complex(int real, int imag) :_real(real), _imag(imag) {
 
 		size += getNumDigits(_real);
 		size += getNumDigits(_imag);
-		size++;
+		size += 2; //For +/- and 'i'
 	}
+
+	_name = new char[size];
+
+
 
 }
 

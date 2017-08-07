@@ -11,6 +11,8 @@ main
 -----------------------------------------------------------------*/
 int main() {
 	complex c1(2, 3);
+	c1.print();
+	/*
 	cout << c1 << endl;
 	complex c2(27, -200);
 	cout << c2 << endl;
@@ -38,5 +40,9 @@ int main() {
 	delete c5;
 	c1 = c2 = c3 = c4;
 	cout << c3 << endl;
+
+	*/
+
+
 	return 0;
 }

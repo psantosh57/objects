@@ -3,27 +3,8 @@
 complex::complex(int real, int imag) :_real(real), _imag(imag) {
 
 	cout << "In complex constructor" << endl;
-	cout << "Setting real to " << real << " and imag to " << imag << endl;
 	
-	int size = 0;
-
-	if (_real == 0 && _imag == 0) {
-
-		size = 2;
-		_name = new char[size];
-		_name = "0";
-
-	}
-	else {
-
-		size += getNumDigits(_real);
-		size += getNumDigits(_imag);
-		size += 2; //For +/- and 'i'
-	}
-
-	_name = new char[size];
-
-
+	fillName(_real, _imag);
 
 }
 
@@ -37,7 +18,6 @@ complex::complex(const complex& rhs) {
 	cout << "In copy constructor" << endl;
 	_copy(rhs);
 
-
 }
 
 complex& complex::operator=(const complex& rhs) {
@@ -50,16 +30,17 @@ complex& complex::operator=(const complex& rhs) {
 
 	}
 
+	return *this;
 }
 
 void complex::_release() {
 
-	delete[] _num;
+	delete[] _name;
 }
 
 void complex::_copy(const complex rhs) {
 
-	_num = copyString(_num, rhs._num);
+	_name = copyString(_name, rhs._name);
 	_real = rhs._real;
 	_imag = rhs._imag;
 
@@ -97,13 +78,25 @@ int complex::getLength(const char* str) {
 
 void complex::print() {
 
-	cout << _name << endl;
+	cout << "Complex number is "<< _name << endl;
 
 }
 
-int complex::getNumDigits(int n) {
+int complex::getNumDigits(int n, bool isImag = false) {
 
 	int count = 0;
+
+	if (n < 0) {
+
+		if (!isImag) {
+			count++;
+			
+		}
+
+		n *= -1;
+
+	}	
+
 	while (n > 0) {
 		count++;
 		n /= 10;
@@ -112,3 +105,95 @@ int complex::getNumDigits(int n) {
 	return count;
 }
 
+void complex::fillName(int real, int imag) {
+
+	int size = 1;
+	int real_size = 1;
+	int imag_size = 1;
+
+	if (_real == 0 && _imag == 0) {
+
+		size++;
+		_name = new char[size];
+		_name = "0";
+
+	}
+	else {
+
+		real_size += getNumDigits(real);
+		imag_size += getNumDigits(imag, true);
+		size += real_size + imag_size; //For +/- sign and 'i'
+	}
+
+	_name = new char[size];
+
+	char * realStr = new char[real_size];
+	char* imagStr = new char[imag_size];
+
+	realStr = intToChar(realStr, _real, real_size);
+	imagStr = intToChar(imagStr, _imag, imag_size);
+
+	int index = 0;
+	
+	index = strAppend(_name, realStr, index);
+
+	if (imag < 0) {
+		_name[index] = '-';
+	}
+	else {
+		_name[index] = '+';
+	}
+
+	index++;
+	
+	_name[index] = 'i';
+	
+	index++;
+
+	index = strAppend(_name, imagStr, index);
+
+	_name[index] = '\0';
+
+}
+
+char* complex::intToChar(char* arr, int n, int count) {
+	
+	int i = (count-1);
+	int m = n;
+	if (n < 0) {
+		n *= -1;
+	}
+	
+	arr[i] = '\0';
+	i--;
+	
+	while (n > 0) {
+		arr[i] = '0' + (n % 10);
+		n /= 10;
+		i--;
+	}
+
+	if (m < 0) {
+		arr[i] = '-';
+	}	
+
+	return arr;
+	
+
+}
+
+int complex::strAppend (char*& name, char* str, int ind = 0) {
+
+	int i = 0;
+
+	while (str[i] != '\0') {
+
+		name[ind] = str[i];
+		i++;
+		ind++;
+
+	}
+
+	return ind;
+	
+}

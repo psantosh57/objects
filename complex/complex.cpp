@@ -10,6 +10,8 @@ complex::complex(int real, int imag) :_real(real), _imag(imag) {
 
 complex::~complex() {
 
+	cout << "In complex destructor " << endl;
+
 	delete[] _name;
 }
 
@@ -20,27 +22,47 @@ complex::complex(const complex& rhs) {
 
 }
 
+bool complex::operator==(const complex& rhs) {
+
+	cout << "In operator == " << endl;
+	if (this != &rhs) {
+		return (this->_real == rhs._real && this->_imag == rhs._imag) ? true : false;
+			
+	}
+
+}
+
+bool complex::operator!=(const complex& rhs) {
+
+	cout << "In operator != " << endl;
+	if (this != &rhs) {
+		return (this->_real != rhs._real || this->_imag != rhs._imag) ? true : false;
+
+	}
+
+}
+
 complex& complex::operator=(const complex& rhs) {
 
-	cout << "In operator = " << endl;
 	if (this != &rhs) {
-
 		_release();
 		_copy(rhs);
 
 	}
 
 	return *this;
+
 }
 
 void complex::_release() {
 
 	delete[] _name;
+
 }
 
-void complex::_copy(const complex rhs) {
+void complex::_copy(const complex& rhs) {
 
-	_name = copyString(_name, rhs._name);
+	_name = copyString(rhs._name, _name);
 	_real = rhs._real;
 	_imag = rhs._imag;
 
@@ -49,14 +71,13 @@ void complex::_copy(const complex rhs) {
 char* complex::copyString(const char* src, char* dst) {
 	
 	int size = getLength(src);
-	dst = new char[size];
+	dst = new char[size+1];
 	int i = 0;
 	while (src[i] != '\0') {
 
 		dst[i] = src[i];
 		i++;
 	}
-
 	dst[i] = '\0';
 
 	return dst;
@@ -65,10 +86,10 @@ char* complex::copyString(const char* src, char* dst) {
 int complex::getLength(const char* str) {
 
 	int i = 0;
-	int count = 0;
+	//int count = 0;
 
 	while (str[i] != '\0') {
-		count++;
+		//count++;
 		i++;
 	}
 
@@ -84,7 +105,9 @@ void complex::print() {
 
 int complex::getNumDigits(int n, bool isImag = false) {
 
+	//cout << "Got digit " << n << endl;
 	int count = 0;
+
 
 	if (n < 0) {
 
@@ -107,11 +130,13 @@ int complex::getNumDigits(int n, bool isImag = false) {
 
 void complex::fillName(int real, int imag) {
 
+	//cout << "Got real " << real << " and imag " << imag << endl;
+
 	int size = 1;
 	int real_size = 1;
 	int imag_size = 1;
 
-	if (_real == 0 && _imag == 0) {
+	if (real == 0 && imag == 0) {
 
 		size++;
 		_name = new char[size];
@@ -122,6 +147,8 @@ void complex::fillName(int real, int imag) {
 
 		real_size += getNumDigits(real);
 		imag_size += getNumDigits(imag, true);
+		//cout << "Real size " << real_size << endl;
+		//cout << "Imag size " << imag_size << endl;
 		size += real_size + imag_size; //For +/- sign and 'i'
 	}
 
@@ -130,9 +157,9 @@ void complex::fillName(int real, int imag) {
 	char * realStr = new char[real_size];
 	char* imagStr = new char[imag_size];
 
-	realStr = intToChar(realStr, _real, real_size);
-	imagStr = intToChar(imagStr, _imag, imag_size);
-
+	realStr = intToChar(realStr, real, real_size);
+	imagStr = intToChar(imagStr, imag, imag_size);
+	
 	int index = 0;
 	
 	index = strAppend(_name, realStr, index);
@@ -158,6 +185,8 @@ void complex::fillName(int real, int imag) {
 
 char* complex::intToChar(char* arr, int n, int count) {
 	
+	//cout << "Got n " << n << endl;
+
 	int i = (count-1);
 	int m = n;
 	if (n < 0) {
@@ -196,4 +225,25 @@ int complex::strAppend (char*& name, char* str, int ind = 0) {
 
 	return ind;
 	
+}
+
+void complex::setxy(int real, int imag) {
+
+	if (this->_real == real && this->_imag == imag) {
+
+		cout << "Trying to set same number" << endl;
+	}
+
+	else {
+		_release();
+		_real = real;
+		_imag = imag;
+		fillName(real, imag);
+	}
+
+}
+
+void complex::remove(char* str) {
+
+	delete[] str;
 }
